@@ -7,7 +7,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Document(collection = "accounts")
+@Document(collection = "accounts_stat")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
 

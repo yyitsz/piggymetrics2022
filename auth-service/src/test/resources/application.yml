@@ -1,5 +1,16 @@
 spring:
+  cloud:
+  #    config:
+  #      uri: ${CONFIG_SERVER_URL:http://localhost:8888}
+  config:
+    import: optional:configserver:http://localhost:8888
   data:
     mongodb:
       database: piggymetrics
       port: 0
+  mongodb:
+    embedded:
+      version: 3.2.2
+eureka:
+  client:
+    enabled: false
