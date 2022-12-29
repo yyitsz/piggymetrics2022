@@ -5,6 +5,8 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.piggymetrics.auth.password.OAuth2ResourceOwnerPasswordAuthenticationConverter;
+import com.piggymetrics.auth.password.OAuth2ResourceOwnerPasswordAuthenticationProvider;
 import com.piggymetrics.auth.service.security.MongoUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,21 +18,32 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2TokenEndpointConfigurer;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.OAuth2Token;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
+import org.springframework.security.oauth2.server.authorization.web.authentication.DelegatingAuthenticationConverter;
+import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2AuthorizationCodeAuthenticationConverter;
+import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2ClientCredentialsAuthenticationConverter;
+import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2RefreshTokenAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,7 +67,54 @@ public class OAuth2AuthorizationConfig {
     @Order(1)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
             throws Exception {
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
+
+        /**
+         http.apply(authorizationServerConfigurer.withObjectPostProcessor(new ObjectPostProcessor<OAuth2TokenEndpointFilter>() {
+        @Override
+        public <O extends OAuth2TokenEndpointFilter> O postProcess(O oauth2TokenEndpointFilter) {
+        oauth2TokenEndpointFilter.setAuthenticationConverter(new DelegatingAuthenticationConverter(
+        Arrays.asList(
+        new OAuth2AuthorizationCodeAuthenticationConverter(),
+        new OAuth2RefreshTokenAuthenticationConverter(),
+        new OAuth2ClientCredentialsAuthenticationConverter(),
+        new OAuth2ResourceOwnerPasswordAuthenticationConverter())));
+        return oauth2TokenEndpointFilter;
+        }
+        })
+         );
+         */
+
+        authorizationServerConfigurer.tokenEndpoint((Customizer<OAuth2TokenEndpointConfigurer>) oAuth2TokenEndpointConfigurer -> oAuth2TokenEndpointConfigurer.accessTokenRequestConverter( new DelegatingAuthenticationConverter(Arrays.asList(
+                new OAuth2AuthorizationCodeAuthenticationConverter(),
+                new OAuth2RefreshTokenAuthenticationConverter(),
+                new OAuth2ClientCredentialsAuthenticationConverter(),
+                new OAuth2ResourceOwnerPasswordAuthenticationConverter()))));
+
+
+        //authorizationServerConfigurer.authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint.consentPage(CUSTOM_CONSENT_PAGE_URI));
+
+        RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
+
+        http
+                .requestMatcher(endpointsMatcher)
+                .authorizeRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
+                .csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
+                .apply(authorizationServerConfigurer);
+                //.and()
+                //.apply(new FederatedIdentityConfigurer());
+
+        SecurityFilterChain securityFilterChain = http.formLogin(Customizer.withDefaults()).build();
+
+        /**
+         * Custom configuration for Resource Owner Password grant type. Current implementation has no support for Resource Owner
+         * Password grant type
+         */
+        addCustomOAuth2ResourceOwnerPasswordAuthenticationProvider(http);
+
+        return securityFilterChain;
+
+        /*OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http
                 // Redirect to the login page when not authenticated from the
                 // authorization endpoint
@@ -63,7 +123,7 @@ public class OAuth2AuthorizationConfig {
                                 new LoginUrlAuthenticationEntryPoint("/login"))
                 );
 
-        return http.build();
+        return http.build();*/
     }
 
     @Bean
@@ -200,5 +260,17 @@ public class OAuth2AuthorizationConfig {
         return ProviderSettings.builder().build();
     }
 
+    private void addCustomOAuth2ResourceOwnerPasswordAuthenticationProvider(HttpSecurity http) {
 
+        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+        OAuth2AuthorizationService authorizationService = http.getSharedObject(OAuth2AuthorizationService.class);
+        OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = http.getSharedObject(OAuth2TokenGenerator.class);
+
+        OAuth2ResourceOwnerPasswordAuthenticationProvider resourceOwnerPasswordAuthenticationProvider =
+                new OAuth2ResourceOwnerPasswordAuthenticationProvider(authenticationManager, authorizationService, tokenGenerator);
+
+        // This will add new authentication provider in the list of existing authentication providers.
+        http.authenticationProvider(resourceOwnerPasswordAuthenticationProvider);
+
+    }
 }
