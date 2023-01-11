@@ -9,7 +9,6 @@ import com.piggymetrics.auth.password.OAuth2ResourceOwnerPasswordAuthenticationC
 import com.piggymetrics.auth.password.OAuth2ResourceOwnerPasswordAuthenticationProvider;
 import com.piggymetrics.auth.service.security.MongoUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -17,7 +16,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2TokenEndpointConfigurer;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -35,7 +33,6 @@ import org.springframework.security.oauth2.server.authorization.web.authenticati
 import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2ClientCredentialsAuthenticationConverter;
 import org.springframework.security.oauth2.server.authorization.web.authentication.OAuth2RefreshTokenAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.security.KeyPair;
@@ -71,8 +68,7 @@ public class OAuth2AuthorizationConfig {
 
         /**
          http.apply(authorizationServerConfigurer.withObjectPostProcessor(new ObjectPostProcessor<OAuth2TokenEndpointFilter>() {
-        @Override
-        public <O extends OAuth2TokenEndpointFilter> O postProcess(O oauth2TokenEndpointFilter) {
+        @Override public <O extends OAuth2TokenEndpointFilter> O postProcess(O oauth2TokenEndpointFilter) {
         oauth2TokenEndpointFilter.setAuthenticationConverter(new DelegatingAuthenticationConverter(
         Arrays.asList(
         new OAuth2AuthorizationCodeAuthenticationConverter(),
@@ -85,7 +81,7 @@ public class OAuth2AuthorizationConfig {
          );
          */
 
-        authorizationServerConfigurer.tokenEndpoint((Customizer<OAuth2TokenEndpointConfigurer>) oAuth2TokenEndpointConfigurer -> oAuth2TokenEndpointConfigurer.accessTokenRequestConverter( new DelegatingAuthenticationConverter(Arrays.asList(
+        authorizationServerConfigurer.tokenEndpoint((Customizer<OAuth2TokenEndpointConfigurer>) oAuth2TokenEndpointConfigurer -> oAuth2TokenEndpointConfigurer.accessTokenRequestConverter(new DelegatingAuthenticationConverter(Arrays.asList(
                 new OAuth2AuthorizationCodeAuthenticationConverter(),
                 new OAuth2RefreshTokenAuthenticationConverter(),
                 new OAuth2ClientCredentialsAuthenticationConverter(),
@@ -101,8 +97,8 @@ public class OAuth2AuthorizationConfig {
                 .authorizeRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
                 .csrf(csrf -> csrf.ignoringRequestMatchers(endpointsMatcher))
                 .apply(authorizationServerConfigurer);
-                //.and()
-                //.apply(new FederatedIdentityConfigurer());
+        //.and()
+        //.apply(new FederatedIdentityConfigurer());
 
         SecurityFilterChain securityFilterChain = http.formLogin(Customizer.withDefaults()).build();
 
