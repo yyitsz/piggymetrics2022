@@ -7,111 +7,111 @@ import com.piggymetrics.notification.domain.NotificationSettings;
 import com.piggymetrics.notification.domain.NotificationType;
 import com.piggymetrics.notification.domain.Recipient;
 import com.piggymetrics.notification.repository.RecipientRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class RecipientServiceImplTest {
 
-	@InjectMocks
-	private RecipientServiceImpl recipientService;
+    @InjectMocks
+    private RecipientServiceImpl recipientService;
 
-	@Mock
-	private RecipientRepository repository;
+    @Mock
+    private RecipientRepository repository;
 
-	@Before
-	public void setup() {
-		initMocks(this);
-	}
+    @BeforeEach
+    public void setup() {
+        initMocks(this);
+    }
 
-	@Test
-	public void shouldFindByAccountName() {
-		Recipient recipient = new Recipient();
-		recipient.setAccountName("test");
+    @Test
+    public void shouldFindByAccountName() {
+        Recipient recipient = new Recipient();
+        recipient.setAccountName("test");
 
-		when(repository.findByAccountName(recipient.getAccountName())).thenReturn(recipient);
-		Recipient found = recipientService.findByAccountName(recipient.getAccountName());
+        when(repository.findByAccountName(recipient.getAccountName())).thenReturn(recipient);
+        Recipient found = recipientService.findByAccountName(recipient.getAccountName());
 
-		assertEquals(recipient, found);
-	}
+        assertEquals(recipient, found);
+    }
 
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldFailToFindRecipientWhenAccountNameIsEmpty() {
-		recipientService.findByAccountName("");
-	}
+    @Test
+    public void shouldFailToFindRecipientWhenAccountNameIsEmpty() {
+        assertThrows(IllegalArgumentException.class, () ->
+                recipientService.findByAccountName(""));
+    }
 
-	@Test
-	public void shouldSaveRecipient() {
+    @Test
+    public void shouldSaveRecipient() {
 
-		NotificationSettings remind = new NotificationSettings();
-		remind.setActive(true);
-		remind.setFrequency(Frequency.WEEKLY);
-		remind.setLastNotified(null);
+        NotificationSettings remind = new NotificationSettings();
+        remind.setActive(true);
+        remind.setFrequency(Frequency.WEEKLY);
+        remind.setLastNotified(null);
 
-		NotificationSettings backup = new NotificationSettings();
-		backup.setActive(false);
-		backup.setFrequency(Frequency.MONTHLY);
-		backup.setLastNotified(new Date());
+        NotificationSettings backup = new NotificationSettings();
+        backup.setActive(false);
+        backup.setFrequency(Frequency.MONTHLY);
+        backup.setLastNotified(new Date());
 
-		Recipient recipient = new Recipient();
-		recipient.setEmail("test@test.com");
-		recipient.setScheduledNotifications(ImmutableMap.of(
-				NotificationType.BACKUP, backup,
-				NotificationType.REMIND, remind
-		));
+        Recipient recipient = new Recipient();
+        recipient.setEmail("test@test.com");
+        recipient.setScheduledNotifications(ImmutableMap.of(
+                NotificationType.BACKUP, backup,
+                NotificationType.REMIND, remind
+        ));
 
-		Recipient saved = recipientService.save("test", recipient);
+        Recipient saved = recipientService.save("test", recipient);
 
-		verify(repository).save(recipient);
-		assertNotNull(saved.getScheduledNotifications().get(NotificationType.REMIND).getLastNotified());
-		assertEquals("test", saved.getAccountName());
-	}
+        verify(repository).save(recipient);
+        assertNotNull(saved.getScheduledNotifications().get(NotificationType.REMIND).getLastNotified());
+        assertEquals("test", saved.getAccountName());
+    }
 
-	@Test
-	public void shouldFindReadyToNotifyWhenNotificationTypeIsBackup() {
-		final List<Recipient> recipients = ImmutableList.of(new Recipient());
-		when(repository.findReadyForBackup()).thenReturn(recipients);
+    @Test
+    public void shouldFindReadyToNotifyWhenNotificationTypeIsBackup() {
+        final List<Recipient> recipients = ImmutableList.of(new Recipient());
+        when(repository.findReadyForBackup()).thenReturn(recipients);
 
-		List<Recipient> found = recipientService.findReadyToNotify(NotificationType.BACKUP);
-		assertEquals(recipients, found);
-	}
+        List<Recipient> found = recipientService.findReadyToNotify(NotificationType.BACKUP);
+        assertEquals(recipients, found);
+    }
 
-	@Test
-	public void shouldFindReadyToNotifyWhenNotificationTypeIsRemind() {
-		final List<Recipient> recipients = ImmutableList.of(new Recipient());
-		when(repository.findReadyForRemind()).thenReturn(recipients);
+    @Test
+    public void shouldFindReadyToNotifyWhenNotificationTypeIsRemind() {
+        final List<Recipient> recipients = ImmutableList.of(new Recipient());
+        when(repository.findReadyForRemind()).thenReturn(recipients);
 
-		List<Recipient> found = recipientService.findReadyToNotify(NotificationType.REMIND);
-		assertEquals(recipients, found);
-	}
+        List<Recipient> found = recipientService.findReadyToNotify(NotificationType.REMIND);
+        assertEquals(recipients, found);
+    }
 
-	@Test
-	public void shouldMarkAsNotified() {
+    @Test
+    public void shouldMarkAsNotified() {
 
-		NotificationSettings remind = new NotificationSettings();
-		remind.setActive(true);
-		remind.setFrequency(Frequency.WEEKLY);
-		remind.setLastNotified(null);
+        NotificationSettings remind = new NotificationSettings();
+        remind.setActive(true);
+        remind.setFrequency(Frequency.WEEKLY);
+        remind.setLastNotified(null);
 
-		Recipient recipient = new Recipient();
-		recipient.setAccountName("test");
-		recipient.setEmail("test@test.com");
-		recipient.setScheduledNotifications(ImmutableMap.of(
-				NotificationType.REMIND, remind
-		));
+        Recipient recipient = new Recipient();
+        recipient.setAccountName("test");
+        recipient.setEmail("test@test.com");
+        recipient.setScheduledNotifications(ImmutableMap.of(
+                NotificationType.REMIND, remind
+        ));
 
-		recipientService.markNotified(NotificationType.REMIND, recipient);
-		assertNotNull(recipient.getScheduledNotifications().get(NotificationType.REMIND).getLastNotified());
-		verify(repository).save(recipient);
-	}
+        recipientService.markNotified(NotificationType.REMIND, recipient);
+        assertNotNull(recipient.getScheduledNotifications().get(NotificationType.REMIND).getLastNotified());
+        verify(repository).save(recipient);
+    }
 }

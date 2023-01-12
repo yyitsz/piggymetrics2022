@@ -8,9 +8,13 @@ spring:
     mongodb:
       database: piggymetrics
       port: 0
-  mongodb:
-    embedded:
-      version: 3.2.2
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.4.18
+
 eureka:
   client:
     enabled: false

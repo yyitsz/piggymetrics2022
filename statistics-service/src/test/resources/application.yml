@@ -11,19 +11,27 @@ spring:
     mongodb:
       database: piggymetrics
       port: 0
-  mongodb:
-    embedded:
-      version: 3.2.2
   config:
     enabled: false
     import: optional:configserver:http://127.0.0.1:8888
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:5000/uaa
+  main:
+    allow-bean-definition-overriding: true
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.4.18
 
 eureka:
   client:
     enabled: false
 
-jwk:
-  set:
-    uri: http://127.0.0.1:5000/uaa/oauth2/jwks
 rates:
-  url: https://api.exchangeratesapi.io
+  url: http://abc.test.com # https://api.exchangeratesapi.io

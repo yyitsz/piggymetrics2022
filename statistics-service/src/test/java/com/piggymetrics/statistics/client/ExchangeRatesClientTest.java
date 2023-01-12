@@ -5,6 +5,7 @@ import com.piggymetrics.statistics.domain.ExchangeRatesContainer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
 
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@DirtiesContext
 public class ExchangeRatesClientTest {
 
     @Autowired
@@ -27,14 +29,14 @@ public class ExchangeRatesClientTest {
 
         assertNotNull(container.getRates());
         assertNotNull(container.getRates().get(Currency.USD.name()));
-        assertNotNull(container.getRates().get(Currency.EUR.name()));
-        assertNotNull(container.getRates().get(Currency.RUB.name()));
+        assertNotNull(container.getRates().get(Currency.HKD.name()));
+        assertNotNull(container.getRates().get(Currency.CNY.name()));
     }
 
     @Test
     public void shouldRetrieveExchangeRatesForSpecifiedCurrency() {
 
-        Currency requestedCurrency = Currency.EUR;
+        Currency requestedCurrency = Currency.HKD;
         ExchangeRatesContainer container = client.getRates(Currency.getBase());
 
         assertEquals(container.getDate(), LocalDate.now());

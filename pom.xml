@@ -4,7 +4,7 @@
 
 	<groupId>com.piggymetrics</groupId>
 	<artifactId>piggymetrics</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>piggymetrics</name>
 
@@ -34,6 +34,7 @@
 	</dependencyManagement>
 	
 	<modules>
+		<module>parent</module>
 		<module>config</module>
 		<module>monitoring</module>
 		<module>registry</module>

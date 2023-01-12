@@ -2,9 +2,9 @@ package com.piggymetrics.statistics.domain;
 
 public enum Currency {
 
-	USD, EUR, RUB;
+    USD, HKD, CNY;
 
-	public static Currency getBase() {
-		return USD;
-	}
+    public static Currency getBase() {
+        return USD;
+    }
 }

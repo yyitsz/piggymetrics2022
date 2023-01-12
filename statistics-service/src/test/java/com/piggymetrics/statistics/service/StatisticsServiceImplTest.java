@@ -78,18 +78,18 @@ public class StatisticsServiceImplTest {
         Item grocery = new Item();
         grocery.setTitle("Grocery");
         grocery.setAmount(new BigDecimal(500));
-        grocery.setCurrency(Currency.RUB);
+        grocery.setCurrency(Currency.CNY);
         grocery.setPeriod(TimePeriod.DAY);
 
         Item vacation = new Item();
         vacation.setTitle("Vacation");
         vacation.setAmount(new BigDecimal(3400));
-        vacation.setCurrency(Currency.EUR);
+        vacation.setCurrency(Currency.HKD);
         vacation.setPeriod(TimePeriod.YEAR);
 
         Saving saving = new Saving();
         saving.setAmount(new BigDecimal(1000));
-        saving.setCurrency(Currency.EUR);
+        saving.setCurrency(Currency.HKD);
         saving.setInterest(new BigDecimal(3.2));
         saving.setDeposit(true);
         saving.setCapitalization(false);
@@ -100,8 +100,8 @@ public class StatisticsServiceImplTest {
         account.setSaving(saving);
 
         final Map<Currency, BigDecimal> rates = ImmutableMap.of(
-                Currency.EUR, new BigDecimal("0.8"),
-                Currency.RUB, new BigDecimal("80"),
+                Currency.HKD, new BigDecimal("0.8"),
+                Currency.CNY, new BigDecimal("80"),
                 Currency.USD, BigDecimal.ONE
         );
 

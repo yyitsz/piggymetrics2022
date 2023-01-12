@@ -15,59 +15,59 @@ import java.util.List;
 @Service
 public class RecipientServiceImpl implements RecipientService {
 
-	private final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private RecipientRepository repository;
+    @Autowired
+    private RecipientRepository repository;
 
-	@Override
-	public Recipient findByAccountName(String accountName) {
-		Assert.hasLength(accountName);
-		return repository.findByAccountName(accountName);
-	}
+    @Override
+    public Recipient findByAccountName(String accountName) {
+        Assert.hasLength(accountName, "accountName");
+        return repository.findByAccountName(accountName);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Recipient save(String accountName, Recipient recipient) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Recipient save(String accountName, Recipient recipient) {
 
-		recipient.setAccountName(accountName);
-		recipient.getScheduledNotifications().values()
-				.forEach(settings -> {
-					if (settings.getLastNotified() == null) {
-						settings.setLastNotified(new Date());
-					}
-				});
+        recipient.setAccountName(accountName);
+        recipient.getScheduledNotifications().values()
+                .forEach(settings -> {
+                    if (settings.getLastNotified() == null) {
+                        settings.setLastNotified(new Date());
+                    }
+                });
 
-		repository.save(recipient);
+        repository.save(recipient);
 
-		log.info("recipient {} settings has been updated", recipient);
+        log.info("recipient {} settings has been updated", recipient);
 
-		return recipient;
-	}
+        return recipient;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Recipient> findReadyToNotify(NotificationType type) {
-		switch (type) {
-			case BACKUP:
-				return repository.findReadyForBackup();
-			case REMIND:
-				return repository.findReadyForRemind();
-			default:
-				throw new IllegalArgumentException();
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Recipient> findReadyToNotify(NotificationType type) {
+        switch (type) {
+            case BACKUP:
+                return repository.findReadyForBackup();
+            case REMIND:
+                return repository.findReadyForRemind();
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void markNotified(NotificationType type, Recipient recipient) {
-		recipient.getScheduledNotifications().get(type).setLastNotified(new Date());
-		repository.save(recipient);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void markNotified(NotificationType type, Recipient recipient) {
+        recipient.getScheduledNotifications().get(type).setLastNotified(new Date());
+        repository.save(recipient);
+    }
 }
