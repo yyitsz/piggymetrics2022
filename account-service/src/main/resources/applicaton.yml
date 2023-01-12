@@ -1,12 +1,20 @@
 spring:
-  application:
-    name: account-service
+                  application:
+  name: account-service
   cloud:
     config:
       #uri: http://config:8888
       fail-fast: true
       password: ${CONFIG_SERVICE_PASSWORD}
       username: user
+
+    openfeign:
+      circuitbreaker:
+        enabled: true
+      oauth2:
+        enabled: true
+
+
   config:
     import: optional:configserver:http://127.0.0.1:8888
 
@@ -15,3 +23,4 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://127.0.0.1:5000/uaa
+

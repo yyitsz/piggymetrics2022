@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(OutputCaptureExtension.class)
 @SpringBootTest(properties = {
-        "feign.hystrix.enabled=true"
+        "spring.cloud.openfeign.circuitbreaker.enabled=true"
 })
 @DirtiesContext
 public class StatisticsServiceClientFallbackTest {

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(url = "${rates.url}", name = "rates-client", fallback = ExchangeRatesClientFallback.class)
-@Primary
+//@Primary
 public interface ExchangeRatesClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/latest")

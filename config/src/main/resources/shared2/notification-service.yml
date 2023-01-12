@@ -48,3 +48,6 @@ spring:
             fallback: false
           ssl:
             enable: true
+    openfeign:
+      circuitbreaker:
+        enabled: true
