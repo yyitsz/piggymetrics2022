@@ -18,6 +18,8 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
+      oauth2:
+        enabled: true
 
 server:
   servlet:

@@ -36,14 +36,14 @@
 	<modules>
 		<module>parent</module>
 		<module>config</module>
-		<module>monitoring</module>
+		<!--<module>monitoring</module>-->
 		<module>registry</module>
 		<module>gateway</module>
 		<module>auth-service</module>
 		<module>account-service</module>
 		<module>statistics-service</module>
 		<module>notification-service</module>
-		<module>turbine-stream-service</module>
+		<!--<module>turbine-stream-service</module>-->
 	</modules>
 
 </project>
