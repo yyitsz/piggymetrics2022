@@ -89,6 +89,7 @@ public class OAuth2AuthorizationConfig {
                 new OAuth2ClientCredentialsAuthenticationConverter(),
                 new OAuth2ResourceOwnerPasswordAuthenticationConverter()))));
 
+        authorizationServerConfigurer.oidc(Customizer.withDefaults());
 
         //authorizationServerConfigurer.authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint.consentPage(CUSTOM_CONSENT_PAGE_URI));
 
@@ -176,7 +177,7 @@ public class OAuth2AuthorizationConfig {
         {
             RegisteredClient acService = RegisteredClient.withId("notification-service-client-credentials")
                     .clientId("notification-service")
-                    .clientSecret("{noop}" + env.getProperty("STATISTICS_SERVICE_PASSWORD", "password3"))
+                    .clientSecret("{noop}" + env.getProperty("NOTIFICATION_SERVICE_PASSWORD", "password3"))
                     .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                     .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)

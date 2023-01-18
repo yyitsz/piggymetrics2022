@@ -24,4 +24,4 @@ eureka:
 
 spring:
   rabbitmq:
-    host: rabbitmq
+    host: 10.100.53.131

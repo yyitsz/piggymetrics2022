@@ -1,4 +1,4 @@
-FROM java:8-jre
+FROM openjdk:17
 MAINTAINER Alexander Lukyanchikov <sqshq@sqshq.com>
 
 ADD ./target/registry.jar /app/
