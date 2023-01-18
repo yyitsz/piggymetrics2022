@@ -1,11 +1,11 @@
 spring:
-                  application:
-  name: account-service
+  application:
+    name: account-service
   cloud:
     config:
       #uri: http://config:8888
       fail-fast: true
-      password: ${CONFIG_SERVICE_PASSWORD}
+      password: ${CONFIG_SERVICE_PASSWORD:password}
       username: user
 
     openfeign:

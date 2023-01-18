@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "accounts")
+@Document(collection = "as_accounts")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
 
@@ -29,7 +29,7 @@ public class Account {
     @NotNull
     private Saving saving;
 
-    @Length(min = 0, max = 20_000)
+    @Length(max = 20_000)
     private String note;
 
     public String getName() {

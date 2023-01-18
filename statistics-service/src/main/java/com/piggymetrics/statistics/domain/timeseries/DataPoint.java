@@ -12,7 +12,7 @@ import java.util.Set;
  * Represents daily time series data point containing
  * current account state
  */
-@Document(collection = "datapoints")
+@Document(collection = "ss_datapoints")
 public class DataPoint {
 
     @Id

@@ -4,7 +4,7 @@
 
 print('dump start');
 
-db.accounts.update(
+db.as_accounts.update(
     { "_id": "demo" },
     {
     "_id": "demo",

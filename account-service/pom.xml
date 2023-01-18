@@ -11,9 +11,9 @@
 
 	<parent>
 		<groupId>com.piggymetrics</groupId>
-		<artifactId>piggymetrics-parent</artifactId>
+		<artifactId>piggymetrics</artifactId>
 		<version>1.1-SNAPSHOT</version>
-		<relativePath>../parent</relativePath>
+
 	</parent>
 
 	<dependencies>
@@ -25,18 +25,7 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>io.github.resilience4j</groupId>
-			<artifactId>resilience4j-bulkhead</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.github.resilience4j</groupId>
-			<artifactId>resilience4j-retry</artifactId>
-		</dependency>
-		<!--		<dependency>
-                    <groupId>io.github.resilience4j</groupId>
-                    <artifactId>resilience4j-spring-cloud3</artifactId>
-                </dependency>-->
+
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
@@ -68,16 +57,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-openfeign</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
-		<!--<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-sleuth</artifactId>
-		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>

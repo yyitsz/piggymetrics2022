@@ -1,11 +1,7 @@
-security:
-  oauth2:
-    client:
-      clientId: account-service
-      clientSecret: ${ACCOUNT_SERVICE_PASSWORD}
-      accessTokenUri: http://auth-service:5000/uaa/oauth/token
-      grant-type: client_credentials
-      scope: server
+server:
+  servlet:
+    context-path: /accounts
+  port: 6000
 
 spring:
   data:
@@ -20,12 +16,33 @@ spring:
         enabled: true
       oauth2:
         enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:5000/uaa
+      client:
+        registration:
+          account-service-client-credentials:
+            provider: spring
+            client-id: account-service
+            client-secret: ${ACCOUNT_SERVICE_PASSWORD:password1}
+            authorization-grant-type: client_credentials
+            scope: server
+            client-name: account-service-client-credentials
+        provider:
+          spring:
+            issuer-uri: http://127.0.0.1:5000/uaa
 
-server:
-  servlet:
-    context-path: /accounts
-  port: 6000
+#security:
+#  oauth2:
+#    client:
+#      clientId: account-service
+#      clientSecret: ${ACCOUNT_SERVICE_PASSWORD}
+#      accessTokenUri: http://auth-service:5000/uaa/oauth/token
+#      grant-type: client_credentials
+#      scope: server
 
-feign:
-  hystrix:
-    enabled: true
+#feign:
+#  hystrix:
+#    enabled: true

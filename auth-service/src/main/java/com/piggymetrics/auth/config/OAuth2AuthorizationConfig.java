@@ -11,7 +11,6 @@ import com.piggymetrics.auth.customizer.jwt.JwtCustomizerHandler;
 import com.piggymetrics.auth.customizer.jwt.impl.JwtCustomizerImpl;
 import com.piggymetrics.auth.customizer.token.claims.OAuth2TokenClaimsCustomizer;
 import com.piggymetrics.auth.customizer.token.claims.impl.OAuth2TokenClaimsCustomizerImpl;
-import com.piggymetrics.auth.service.security.MongoUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +29,6 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2TokenEndpointConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
@@ -47,7 +45,6 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author cdov
@@ -71,7 +68,7 @@ public class OAuth2AuthorizationConfig {
             throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 
-        /**
+        /*
          http.apply(authorizationServerConfigurer.withObjectPostProcessor(new ObjectPostProcessor<OAuth2TokenEndpointFilter>() {
         @Override public <O extends OAuth2TokenEndpointFilter> O postProcess(O oauth2TokenEndpointFilter) {
         oauth2TokenEndpointFilter.setAuthenticationConverter(new DelegatingAuthenticationConverter(
@@ -86,7 +83,7 @@ public class OAuth2AuthorizationConfig {
          );
          */
 
-        authorizationServerConfigurer.tokenEndpoint((Customizer<OAuth2TokenEndpointConfigurer>) oAuth2TokenEndpointConfigurer -> oAuth2TokenEndpointConfigurer.accessTokenRequestConverter(new DelegatingAuthenticationConverter(Arrays.asList(
+        authorizationServerConfigurer.tokenEndpoint(oAuth2TokenEndpointConfigurer -> oAuth2TokenEndpointConfigurer.accessTokenRequestConverter(new DelegatingAuthenticationConverter(Arrays.asList(
                 new OAuth2AuthorizationCodeAuthenticationConverter(),
                 new OAuth2RefreshTokenAuthenticationConverter(),
                 new OAuth2ClientCredentialsAuthenticationConverter(),
@@ -107,7 +104,7 @@ public class OAuth2AuthorizationConfig {
 
         SecurityFilterChain securityFilterChain = http.formLogin(Customizer.withDefaults()).build();
 
-        /**
+        /*
          * Custom configuration for Resource Owner Password grant type. Current implementation has no support for Resource Owner
          * Password grant type
          */
@@ -151,9 +148,9 @@ public class OAuth2AuthorizationConfig {
 
         List<RegisteredClient> clientList = new ArrayList<>();
         {
-            RegisteredClient acService = RegisteredClient.withId(UUID.randomUUID().toString())
+            RegisteredClient acService = RegisteredClient.withId("browser_password")
                     .clientId("browser")
-                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
+                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                     .authorizationGrantType(AuthorizationGrantType.PASSWORD)
                     .scope("ui")
@@ -163,40 +160,43 @@ public class OAuth2AuthorizationConfig {
         }
 
         {
-            RegisteredClient acService = RegisteredClient.withId(UUID.randomUUID().toString())
+            RegisteredClient acService = RegisteredClient.withId("account-service-client-credentials")
                     .clientId("account-service")
-                    .clientSecret("{noop}" + env.getProperty("ACCOUNT_SERVICE_PASSWORD"))
-                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
+                    .clientSecret("{noop}" + env.getProperty("ACCOUNT_SERVICE_PASSWORD", "password1"))
+                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                     .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                     .scope("server")
                     .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+                    .clientName("account-service-client-credentials")
                     .build();
             clientList.add(acService);
         }
 
         {
-            RegisteredClient acService = RegisteredClient.withId(UUID.randomUUID().toString())
+            RegisteredClient acService = RegisteredClient.withId("notification-service-client-credentials")
                     .clientId("notification-service")
-                    .clientSecret("{noop}" + env.getProperty("STATISTICS_SERVICE_PASSWORD"))
-                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
+                    .clientSecret("{noop}" + env.getProperty("STATISTICS_SERVICE_PASSWORD", "password3"))
+                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                     .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                     .scope("server")
                     .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+                    .clientName("notification-service-client-credentials")
                     .build();
             clientList.add(acService);
         }
 
         {
-            RegisteredClient acService = RegisteredClient.withId(UUID.randomUUID().toString())
+            RegisteredClient acService = RegisteredClient.withId("statistics-service-client-credentials")
                     .clientId("statistics-service")
-                    .clientSecret("{noop}" + env.getProperty("NOTIFICATION_SERVICE_PASSWORD"))
-                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
+                    .clientSecret("{noop}" + env.getProperty("STATISTICS_SERVICE_PASSWORD", "password2"))
+                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                     .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                     .scope("server")
                     .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
+                    .clientName("statistics-service-client-credentials")
                     .build();
             clientList.add(acService);
         }
@@ -226,22 +226,16 @@ public class OAuth2AuthorizationConfig {
 
         JwtCustomizerHandler jwtCustomizerHandler = JwtCustomizerHandler.getJwtCustomizerHandler();
         JwtCustomizer jwtCustomizer = new JwtCustomizerImpl(jwtCustomizerHandler);
-        OAuth2TokenCustomizer<JwtEncodingContext> customizer = (context) -> {
-            jwtCustomizer.customizeToken(context);
-        };
 
-        return customizer;
+        return jwtCustomizer::customizeToken;
     }
 
     @Bean
     public OAuth2TokenCustomizer<OAuth2TokenClaimsContext> buildOAuth2TokenClaimsCustomizer() {
 
         OAuth2TokenClaimsCustomizer oauth2TokenClaimsCustomizer = new OAuth2TokenClaimsCustomizerImpl();
-        OAuth2TokenCustomizer<OAuth2TokenClaimsContext> customizer = (context) -> {
-            oauth2TokenClaimsCustomizer.customizeTokenClaims(context);
-        };
 
-        return customizer;
+        return oauth2TokenClaimsCustomizer::customizeTokenClaims;
     }
 
     private void addCustomOAuth2ResourceOwnerPasswordAuthenticationProvider(HttpSecurity http) {

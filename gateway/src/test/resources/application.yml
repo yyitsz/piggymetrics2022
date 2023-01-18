@@ -1,0 +1,10 @@
+eureka:
+  client:
+    enabled: false
+spring:
+  config:
+    import: optional:configserver:http://127.0.0.1:8889
+  cloud:
+    config:
+      #uri: http://config:8888
+      fail-fast: false

@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Map;
 
-@Document(collection = "recipients")
+@Document(collection = "ns_recipients")
 public class Recipient {
 
     @Id

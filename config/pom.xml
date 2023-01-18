@@ -12,10 +12,10 @@
 
 	<parent>
 		<groupId>com.piggymetrics</groupId>
-		<artifactId>piggymetrics-parent</artifactId>
+		<artifactId>piggymetrics</artifactId>
 		<version>1.1-SNAPSHOT</version>
-		<relativePath>../parent</relativePath>
-	</parent>
+
+    </parent>
 
 	<dependencies>
 		<dependency>

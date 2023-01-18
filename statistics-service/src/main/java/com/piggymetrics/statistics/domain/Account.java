@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document(collection = "accounts_stat")
+@Document(collection = "ss_accounts")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
 

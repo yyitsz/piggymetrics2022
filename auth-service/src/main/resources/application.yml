@@ -5,7 +5,7 @@ spring:
     config:
       #uri: http://config:8888
       fail-fast: true
-      password: ${CONFIG_SERVICE_PASSWORD}
+      password: ${CONFIG_SERVICE_PASSWORD:password}
       username: user
   config:
     import: optional:configserver:http://127.0.0.1:8888
