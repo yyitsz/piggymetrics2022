@@ -1,6 +1,13 @@
 logging:
   level:
-    org.springframework.security: INFO
+    org.springframework.security: DEBUG
+    #Gateway
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    org.springframework.boot.autoconfigure.web: DEBUG
+    reactor.netty: DEBUG
+    redisratelimiter: DEBUG
 
 hystrix:
   command:

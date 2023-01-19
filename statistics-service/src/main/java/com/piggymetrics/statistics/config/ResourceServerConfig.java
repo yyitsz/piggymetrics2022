@@ -45,6 +45,7 @@ public class ResourceServerConfig {
                 .anyRequest().authenticated()
                 //.mvcMatchers("/messages/**").access("hasAuthority('USER')")
                 .and()
+                .csrf().disable()
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
                                 //.decoder(jwtDecoder())

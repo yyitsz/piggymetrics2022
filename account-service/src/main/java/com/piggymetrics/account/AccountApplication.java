@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class AccountApplication {
 
     public static void main(String[] args) {

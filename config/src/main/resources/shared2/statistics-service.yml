@@ -11,11 +11,13 @@ spring:
       password: ${MONGODB_PASSWORD:password}
       database: piggymetrics
       port: 27017
+  cloud:
     openfeign:
       circuitbreaker:
         enabled: true
       oauth2:
         enabled: true
+        clientRegistrationId: statistics-service-client-credentials
   security:
     oauth2:
       resourceserver:

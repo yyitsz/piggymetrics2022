@@ -39,11 +39,13 @@ spring:
             fallback: false
           ssl:
             enable: true
+  cloud:
     openfeign:
       circuitbreaker:
         enabled: true
       oauth2:
         enabled: true
+        clientRegistrationId: notification-service-client-credentials
   security:
     oauth2:
       resourceserver:
