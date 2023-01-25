@@ -13,34 +13,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration(proxyBeanMethods = false)
 public class ResourceServerConfig {
 
-//    private final ResourceServerProperties sso;
-//
-//    @Autowired
-//    public ResourceServerConfig(ResourceServerProperties sso) {
-//        this.sso = sso;
-//    }
-//
-//    @Bean
-//    @ConfigurationProperties(prefix = "security.oauth2.client")
-//    public ClientCredentialsResourceDetails clientCredentialsResourceDetails() {
-//        return new ClientCredentialsResourceDetails();
-//    }
-//
-/*    @Bean
-    public RequestInterceptor oauth2FeignRequestInterceptor(){
-        return new OAuth2FeignRequestInterceptor(new DefaultOAuth2ClientContext(), clientCredentialsResourceDetails());
-    }*/
-//
-//    @Bean
-//    public OAuth2RestTemplate clientCredentialsRestTemplate() {
-//        return new OAuth2RestTemplate(clientCredentialsResourceDetails());
-//    }
-//
-//    @Bean
-//    public ResourceServerTokenServices tokenServices() {
-//        return new CustomUserInfoTokenServices(sso.getUserInfoUri(), sso.getClientId());
-//    }
-
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(

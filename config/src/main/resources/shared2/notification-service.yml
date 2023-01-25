@@ -63,12 +63,3 @@ spring:
         provider:
           spring:
             issuer-uri: http://10.100.53.106:5000/uaa
-
-#security:
-#  oauth2:
-#    client:
-#      clientId: notification-service
-#      clientSecret: ${NOTIFICATION_SERVICE_PASSWORD}
-#      accessTokenUri: http://auth-service:5000/uaa/oauth/token
-#      grant-type: client_credentials
-#      scope: server

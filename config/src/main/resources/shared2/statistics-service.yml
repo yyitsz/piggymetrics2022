@@ -36,16 +36,5 @@ spring:
           spring:
             issuer-uri: http://10.100.53.106:5000/uaa
 
-#security:
-#  oauth2:
-#    client:
-#      clientId: statistics-service
-#      clientSecret: ${STATISTICS_SERVICE_PASSWORD}
-#      accessTokenUri: http://auth-service:5000/uaa/oauth/token
-#      grant-type: client_credentials
-#      scope: server
-
-
-
 rates:
   url: https://abc.dummy.com # https://api.exchangeratesapi.io
