@@ -5,7 +5,6 @@ import com.piggymetrics.statistics.domain.ExchangeRatesContainer;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.HashMap;
 
 @Component
@@ -16,8 +15,8 @@ public class ExchangeRatesClientFallback implements ExchangeRatesClient {
         ExchangeRatesContainer container = new ExchangeRatesContainer();
         container.setBase(Currency.getBase());
         HashMap<String, BigDecimal> rates = new HashMap<>();
-        rates.put(Currency.HKD.toString(), new BigDecimal("7.8"));
-        rates.put(Currency.CNY.toString(), new BigDecimal("6.9"));
+        rates.put(Currency.EUR.toString(), new BigDecimal("0.8"));
+        rates.put(Currency.RUB.toString(), new BigDecimal("10.0"));
         rates.put(Currency.USD.toString(), new BigDecimal("1"));
         container.setRates(rates);
         return container;

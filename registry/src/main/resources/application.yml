@@ -8,7 +8,7 @@ spring:
       password: ${CONFIG_SERVICE_PASSWORD:password}
       username: user
   config:
-    import: optional:configserver:http://127.0.0.1:8888
+    import: optional:configserver:http://10.100.53.106:8888
 
 eureka:
   instance:

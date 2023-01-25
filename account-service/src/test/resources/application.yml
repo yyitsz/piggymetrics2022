@@ -4,12 +4,12 @@ spring:
       database: piggymetrics
       port: 0
   config:
-    import: optional:configserver:http://127.0.0.1:8888
+    import: optional:configserver:http://10.100.53.106:8888
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:5000/uaa
+          issuer-uri: http://10.100.53.106:5000/uaa
 
 de:
   flapdoodle:

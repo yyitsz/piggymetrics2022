@@ -34,8 +34,8 @@ public class ExchangeRatesServiceImplTest {
 
         ExchangeRatesContainer container = new ExchangeRatesContainer();
         container.setRates(ImmutableMap.of(
-                Currency.HKD.name(), new BigDecimal("0.8"),
-                Currency.CNY.name(), new BigDecimal("80")
+                Currency.EUR.name(), new BigDecimal("0.8"),
+                Currency.RUB.name(), new BigDecimal("80")
         ));
 
         when(client.getRates(Currency.getBase())).thenReturn(container);
@@ -43,8 +43,8 @@ public class ExchangeRatesServiceImplTest {
         Map<Currency, BigDecimal> result = ratesService.getCurrentRates();
         verify(client, times(1)).getRates(Currency.getBase());
 
-        assertEquals(container.getRates().get(Currency.HKD.name()), result.get(Currency.HKD));
-        assertEquals(container.getRates().get(Currency.CNY.name()), result.get(Currency.CNY));
+        assertEquals(container.getRates().get(Currency.EUR.name()), result.get(Currency.EUR));
+        assertEquals(container.getRates().get(Currency.RUB.name()), result.get(Currency.RUB));
         assertEquals(BigDecimal.ONE, result.get(Currency.USD));
     }
 
@@ -53,8 +53,8 @@ public class ExchangeRatesServiceImplTest {
 
         ExchangeRatesContainer container = new ExchangeRatesContainer();
         container.setRates(ImmutableMap.of(
-                Currency.HKD.name(), new BigDecimal("0.8"),
-                Currency.CNY.name(), new BigDecimal("80")
+                Currency.EUR.name(), new BigDecimal("0.8"),
+                Currency.RUB.name(), new BigDecimal("80")
         ));
 
         when(client.getRates(Currency.getBase())).thenReturn(container);
@@ -73,8 +73,8 @@ public class ExchangeRatesServiceImplTest {
 
         ExchangeRatesContainer container = new ExchangeRatesContainer();
         container.setRates(ImmutableMap.of(
-                Currency.HKD.name(), new BigDecimal("0.8"),
-                Currency.CNY.name(), new BigDecimal("80")
+                Currency.EUR.name(), new BigDecimal("0.8"),
+                Currency.RUB.name(), new BigDecimal("80")
         ));
 
         when(client.getRates(Currency.getBase())).thenReturn(container);
@@ -82,7 +82,7 @@ public class ExchangeRatesServiceImplTest {
         final BigDecimal amount = new BigDecimal(100);
         final BigDecimal expectedConvertionResult = new BigDecimal("1.25");
 
-        BigDecimal result = ratesService.convert(Currency.CNY, Currency.USD, amount);
+        BigDecimal result = ratesService.convert(Currency.RUB, Currency.USD, amount);
 
         assertTrue(expectedConvertionResult.compareTo(result) == 0);
     }
@@ -90,6 +90,6 @@ public class ExchangeRatesServiceImplTest {
     @Test
     public void shouldFailToConvertWhenAmountIsNull() {
         assertThrows(IllegalArgumentException.class, () ->
-                ratesService.convert(Currency.HKD, Currency.CNY, null));
+                ratesService.convert(Currency.EUR, Currency.RUB, null));
     }
 }

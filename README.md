@@ -80,7 +80,7 @@ spring:
 For example, [EmailService bean](https://github.com/sqshq/PiggyMetrics/blob/master/notification-service/src/main/java/com/piggymetrics/notification/service/EmailServiceImpl.java) is annotated with `@RefreshScope`. That means you can change e-mail text and subject without rebuild and restart the Notification service.
 
 First, change required properties in Config server. Then make a refresh call to the Notification service:
-`curl -H "Authorization: Bearer #token#" -XPOST http://127.0.0.1:8000/notifications/refresh`
+`curl -H "Authorization: Bearer #token#" -XPOST http://10.100.53.106:8000/notifications/refresh`
 
 You could also use Repository [webhooks to automate this process](http://cloud.spring.io/spring-cloud-config/spring-cloud-config.html#_push_notifications_and_spring_cloud_bus)
 

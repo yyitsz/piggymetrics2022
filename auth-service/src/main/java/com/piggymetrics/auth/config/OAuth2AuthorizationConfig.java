@@ -151,7 +151,8 @@ public class OAuth2AuthorizationConfig {
         {
             RegisteredClient acService = RegisteredClient.withId("browser_password")
                     .clientId("browser")
-                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                    .clientSecret("{noop}abc123")
+                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
                     .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                     .authorizationGrantType(AuthorizationGrantType.PASSWORD)
                     .scope("ui")

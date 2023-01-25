@@ -46,7 +46,6 @@ public class ResourceServerConfig {
         http.securityMatcher("/**")
                 .authorizeHttpRequests()
                 .anyRequest().authenticated()
-                //.mvcMatchers("/messages/**").access("hasAuthority('USER')")
                 .and()
                 .csrf().disable()
                 .oauth2ResourceServer(oauth2 -> oauth2

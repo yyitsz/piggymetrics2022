@@ -14,7 +14,7 @@ spring:
   cloud:
     openfeign:
       circuitbreaker:
-        enabled: true
+        enabled: false
       oauth2:
         enabled: true
         clientRegistrationId: account-service-client-credentials
@@ -25,7 +25,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:5000/uaa
+          issuer-uri: http://10.100.53.106:5000/uaa
       client:
         registration:
           account-service-client-credentials:
@@ -37,7 +37,7 @@ spring:
             client-name: account-service-client-credentials
         provider:
           spring:
-            issuer-uri: http://127.0.0.1:5000/uaa
+            issuer-uri: http://10.100.53.106:5000/uaa
 
 #security:
 #  oauth2:

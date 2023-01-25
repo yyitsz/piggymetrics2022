@@ -31,14 +31,14 @@ public class ExchangeRatesClientTest {
 
         assertNotNull(container.getRates());
         assertNotNull(container.getRates().get(Currency.USD.name()));
-        assertNotNull(container.getRates().get(Currency.HKD.name()));
-        assertNotNull(container.getRates().get(Currency.CNY.name()));
+        assertNotNull(container.getRates().get(Currency.EUR.name()));
+        assertNotNull(container.getRates().get(Currency.RUB.name()));
     }
 
     @Test
     public void shouldRetrieveExchangeRatesForSpecifiedCurrency() {
 
-        Currency requestedCurrency = Currency.HKD;
+        Currency requestedCurrency = Currency.EUR;
         ExchangeRatesContainer container = client.getRates(Currency.getBase());
 
         assertEquals(container.getDate(), LocalDate.now());

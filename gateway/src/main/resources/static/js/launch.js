@@ -12,18 +12,19 @@ var global = {
 function requestOauthToken(username, password) {
 
 	var success = false;
-
 	$.ajax({
-		url: 'uaa/oauth/token',
+		url: 'uaa/oauth2/token',
 		datatype: 'json',
 		type: 'post',
-		headers: {'Authorization': 'Basic YnJvd3Nlcjo='},
+//		headers: {'Authorization': 'Basic YnJvd3NlciUzQWFiYzEyMw=='},
 		async: false,
 		data: {
 			scope: 'ui',
 			username: username,
 			password: password,
-			grant_type: 'password'
+			grant_type: 'password',
+			client_id: 'browser',
+			client_secret: 'abc123',
 		},
 		success: function (data) {
 			localStorage.setItem('token', data.access_token);
@@ -81,8 +82,10 @@ $(window).load(function(){
 	}
 
     $.getJSON("https://api.exchangeratesapi.io/latest?base=RUB&symbols=EUR,USD", function( data ) {
-        global.eur = 1 / data.rates.EUR;
-        global.usd = 1 / data.rates.USD;
+        //global.eur = 1 / data.rates.EUR;
+        //global.usd = 1 / data.rates.USD;
+        global.eur = 1.2;
+        global.usd = 1;
     });
 
 	var account = getCurrentAccount();

@@ -22,7 +22,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:5000/uaa
+          issuer-uri: http://10.100.53.106:5000/uaa
       client:
         registration:
           statistics-service-client-credentials:
@@ -34,7 +34,7 @@ spring:
             client-name: statistics-service-client-credentials
         provider:
           spring:
-            issuer-uri: http://127.0.0.1:5000/uaa
+            issuer-uri: http://10.100.53.106:5000/uaa
 
 #security:
 #  oauth2:

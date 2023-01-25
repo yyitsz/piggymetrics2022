@@ -3,7 +3,7 @@ eureka:
     enabled: false
 spring:
   config:
-    import: optional:configserver:http://127.0.0.1:8889
+    import: optional:configserver:http://10.100.53.106:8889
   cloud:
     config:
       #uri: http://config:8888

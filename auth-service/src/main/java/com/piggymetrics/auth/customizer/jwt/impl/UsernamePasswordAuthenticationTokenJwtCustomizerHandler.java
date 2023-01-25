@@ -4,7 +4,6 @@ import com.piggymetrics.auth.customizer.jwt.JwtCustomizerHandler;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
@@ -26,7 +25,7 @@ public class UsernamePasswordAuthenticationTokenJwtCustomizerHandler extends Abs
     protected void customizeJwt(JwtEncodingContext jwtEncodingContext) {
 
         Authentication authentication = jwtEncodingContext.getPrincipal();
-        User userPrincipal = (User) authentication.getPrincipal();
+        com.piggymetrics.auth.domain.User userPrincipal = (com.piggymetrics.auth.domain.User) authentication.getPrincipal();
         String userId = userPrincipal.getUsername();
         Set<String> authorities = userPrincipal.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
